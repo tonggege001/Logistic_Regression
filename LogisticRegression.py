@@ -43,14 +43,14 @@ class logistic_regression(object):
             #计算梯度
             grad = 0.0
             for k in range(batch_data.shape[0]):
-                grad = grad-(batch_label[k]-self.w[j])*batch_data[k][j]
+                grad = grad-(batch_label[k]-self.compute_probability(batch_data[k]))*batch_data[k][j]
             #更新权重
             grad = grad/batch_data.shape[0]
             self.w[j] = self.w[j]-self.learning_rate[j]*grad
         #更新b
         grad = 0.0
         for k in range(batch_data.shape[0]):
-            grad = grad-(batch_label[k]-self.b)*1
+            grad = grad-(batch_label[k]-self.compute_probability(batch_data[k]))*1
         grad = grad/batch_data.shape[0]
         self.b = self.b - self.learning_rate[self.dimension] * grad
 
@@ -77,10 +77,8 @@ class logistic_regression(object):
             num += (self.w[i]*elem[i])
         num = num + self.b
         #防止计算出现溢出
-        if(num > 10) :
-            number = 10
-        if (num <-10):
-            num = -10
+        if (num <-50):
+            num = -50
         return 1/(1+math.exp(-num))
 
     def normPara(self, dataSet):
@@ -107,6 +105,8 @@ class logistic_regression(object):
 
             print("第"+str(i+1)+"个元素是类别1的概率为"+str(prob)+"，该元素真实类别为"+str(testLabel[i])+ok_string)
         print("\n\n正确率为："+str(ok_number/len(testLabel)))
+        print(self.w)
+        print(self.b)
 
 if __name__=="__main__":
         #打开数据集
